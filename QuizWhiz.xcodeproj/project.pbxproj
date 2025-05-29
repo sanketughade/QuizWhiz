@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		26DD246C8BD72993C41B3013 /* Pods_QuizWhiz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F7D0E1EDC9B2300CC46DDFF /* Pods_QuizWhiz.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		79D177DF2DE376AF007D6DA3 /* QuizWhiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizWhiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F7D0E1EDC9B2300CC46DDFF /* Pods_QuizWhiz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuizWhiz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C0C243AECAC876F7D7AD150 /* Pods-QuizWhiz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuizWhiz.debug.xcconfig"; path = "Target Support Files/Pods-QuizWhiz/Pods-QuizWhiz.debug.xcconfig"; sourceTree = "<group>"; };
+		F2A11D1CD446BD83068DE942 /* Pods-QuizWhiz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuizWhiz.release.xcconfig"; path = "Target Support Files/Pods-QuizWhiz/Pods-QuizWhiz.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26DD246C8BD72993C41B3013 /* Pods_QuizWhiz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +55,8 @@
 			children = (
 				79D177E12DE376AF007D6DA3 /* QuizWhiz */,
 				79D177E02DE376AF007D6DA3 /* Products */,
+				BCB5B2E20E4AD0060A0FE424 /* Pods */,
+				D17E4D18ADD42CC1FFBC3EAF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +68,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BCB5B2E20E4AD0060A0FE424 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9C0C243AECAC876F7D7AD150 /* Pods-QuizWhiz.debug.xcconfig */,
+				F2A11D1CD446BD83068DE942 /* Pods-QuizWhiz.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		D17E4D18ADD42CC1FFBC3EAF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8F7D0E1EDC9B2300CC46DDFF /* Pods_QuizWhiz.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -65,9 +92,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79D177F22DE376B0007D6DA3 /* Build configuration list for PBXNativeTarget "QuizWhiz" */;
 			buildPhases = (
+				A90B08513057F108B7D4DD88 /* [CP] Check Pods Manifest.lock */,
 				79D177DB2DE376AF007D6DA3 /* Sources */,
 				79D177DC2DE376AF007D6DA3 /* Frameworks */,
 				79D177DD2DE376AF007D6DA3 /* Resources */,
+				979C6EF92677D9C50501CC89 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -77,8 +106,6 @@
 				79D177E12DE376AF007D6DA3 /* QuizWhiz */,
 			);
 			name = QuizWhiz;
-			packageProductDependencies = (
-			);
 			productName = QuizWhiz;
 			productReference = 79D177DF2DE376AF007D6DA3 /* QuizWhiz.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +154,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		979C6EF92677D9C50501CC89 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QuizWhiz/Pods-QuizWhiz-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QuizWhiz/Pods-QuizWhiz-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QuizWhiz/Pods-QuizWhiz-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A90B08513057F108B7D4DD88 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-QuizWhiz-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		79D177DB2DE376AF007D6DA3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -140,6 +209,7 @@
 /* Begin XCBuildConfiguration section */
 		79D177F32DE376B0007D6DA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C0C243AECAC876F7D7AD150 /* Pods-QuizWhiz.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -168,6 +238,7 @@
 		};
 		79D177F42DE376B0007D6DA3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2A11D1CD446BD83068DE942 /* Pods-QuizWhiz.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -231,7 +302,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -294,7 +365,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
