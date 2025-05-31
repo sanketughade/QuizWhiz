@@ -11,15 +11,17 @@ class ViewController: UIViewController {
     
     //MARK: UI Elements
     
-    let questionCountField = UITextField()
+    let questionCountPickerField = UITextField()
     let categoryPickerField = UITextField()
     let difficultyPickerField = UITextField()
     
+    let questionPicker = UIPickerView()
     let categoryPicker = UIPickerView()
     let difficultyPicker = UIPickerView()
     
     let startQuizButton = UIButton()
     
+    let questionCount = ["10", "20", "50", "100"]
     let categories = ["General Knowledge", "Entertainment", "Science", "History"]
     let difficulties = ["Easy", "Medium", "Hard"]
 
@@ -27,14 +29,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: "#f3f2e9")
         
-        setupInput(questionCountField, placeholder: "Number of Questions")
+        setupInput(questionCountPickerField, placeholder: "Number of Questions")
         setupInput(categoryPickerField, placeholder: "Select Category")
         setupInput(difficultyPickerField, placeholder: "Select Difficulty")
         setupStartQuizButton(startQuizButton)
         
+        questionCountPickerField.inputView = questionPicker
         categoryPickerField.inputView = categoryPicker
         difficultyPickerField.inputView = difficultyPicker
         
+        questionPicker.delegate = self
         categoryPicker.delegate = self
         categoryPicker.dataSource = self
         difficultyPicker.delegate = self
@@ -51,7 +55,7 @@ class ViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
-            [self.questionCountField, self.categoryPickerField, self.difficultyPickerField, self.startQuizButton].forEach { self.applyAsymmetricBorder(to: $0) }
+            [self.questionCountPickerField, self.categoryPickerField, self.difficultyPickerField, self.startQuizButton].forEach { self.applyAsymmetricBorder(to: $0) }
         }
     }
     
@@ -89,7 +93,7 @@ class ViewController: UIViewController {
     //MARK: Layout
     func layoutInputs() {
         let stackView = UIStackView(arrangedSubviews: [
-            questionCountField,
+            questionCountPickerField,
             categoryPickerField,
             difficultyPickerField,
             startQuizButton
@@ -100,7 +104,7 @@ class ViewController: UIViewController {
         stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.setCustomSpacing(30, after: questionCountField)
+        stackView.setCustomSpacing(30, after: questionCountPickerField)
         stackView.setCustomSpacing(30, after: categoryPickerField)
         stackView.setCustomSpacing(50, after: difficultyPickerField)
         
@@ -113,7 +117,7 @@ class ViewController: UIViewController {
         ])
         
         //Set height constraint for each field
-        [questionCountField, categoryPickerField, difficultyPickerField, startQuizButton].forEach {
+        [questionCountPickerField, categoryPickerField, difficultyPickerField, startQuizButton].forEach {
             $0.heightAnchor.constraint(equalToConstant: 55).isActive = true
         }
     }
@@ -175,15 +179,30 @@ extension ViewController: UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerView == categoryPicker ? categories.count : difficulties.count
+        if pickerView == questionPicker {
+            return questionCount.count
+        } else if pickerView == categoryPicker {
+            return categories.count
+        } else {
+            return difficulties.count
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerView == categoryPicker ? categories[row] : difficulties[row]
+        if pickerView == questionPicker {
+            return questionCount[row]
+        } else if pickerView == categoryPicker {
+            return categories[row]
+        } else {
+            return difficulties[row]
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView == categoryPicker {
+        if pickerView == questionPicker {
+            questionCountPickerField.text = questionCount[row]
+        }
+        else if pickerView == categoryPicker {
             categoryPickerField.text = categories[row]
         } else {
             difficultyPickerField.text = difficulties[row]
