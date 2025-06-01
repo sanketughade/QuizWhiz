@@ -41,6 +41,10 @@ class ViewController: UIViewController {
         categoryPickerField.inputView = categoryPicker
         difficultyPickerField.inputView = difficultyPicker
         
+        questionCountPickerField.inputAccessoryView = createPickerToolbar(for: questionCountPickerField)
+        categoryPickerField.inputAccessoryView = createPickerToolbar(for: categoryPickerField)
+        difficultyPickerField.inputAccessoryView = createPickerToolbar(for: difficultyPickerField)
+        
         questionPicker.delegate = self
         categoryPicker.delegate = self
         categoryPicker.dataSource = self
@@ -59,8 +63,26 @@ class ViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
-            [self.brandView, self.questionCountPickerField, self.categoryPickerField, self.difficultyPickerField, self.startQuizButton].forEach { self.applyAsymmetricBorder(to: $0) }
+            [self.brandView, self.questionCountPickerField, self.categoryPickerField, self.difficultyPickerField, self.startQuizButton].forEach { $0.applyAsymmetricBorder() }
         }
+    }
+    
+    @objc func touchDown(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.1) {
+            sender.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+            sender.backgroundColor = UIColor(hex: "#a370d3") // slightly darker
+        }
+    }
+    
+    @objc func touchUp(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.1) {
+            sender.transform = .identity
+            sender.backgroundColor = UIColor(hex: "#b684df")
+        }
+    }
+    
+    @objc func closePicker() {
+        view.endEditing(true) //Dismiss the keyboard or picker
     }
     
     //MARK: Input Setup
@@ -71,7 +93,6 @@ class ViewController: UIViewController {
         field.font = UIFont(name: "AvenirNext-Medium", size: 18)
         field.layer.cornerRadius = 12
         field.borderStyle = .none
-        field.delegate = self
         
         //Add padding
         let padding = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
@@ -92,37 +113,7 @@ class ViewController: UIViewController {
         //Padding inside button text
         button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 20, bottom: 14, trailing: 20)
     }
-    
-    //MARK: Brand View
-    func addBrandView() {
-        brandView.translatesAutoresizingMaskIntoConstraints = false
-        brandView.layer.backgroundColor = UIColor(hex: "#50a46d").cgColor
-        
-        view.addSubview(brandView)
-        
-        NSLayoutConstraint.activate([
-            brandView.topAnchor.constraint(equalTo: view.topAnchor),
-            brandView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            brandView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            brandView.heightAnchor.constraint(equalTo: brandView.widthAnchor)
-        ])
-        
-        let brandImageView = UIImageView()
-        brandImageView.translatesAutoresizingMaskIntoConstraints = false
-        brandImageView.image = UIImage(named: "Quiz-Whiz")
-        brandImageView.contentMode = .scaleAspectFit
-        
-        brandView.addSubview(brandImageView)
-        
-        NSLayoutConstraint.activate([
-            brandImageView.centerXAnchor.constraint(equalTo: brandView.centerXAnchor),
-            brandImageView.centerYAnchor.constraint(equalTo: brandView.centerYAnchor),
-            brandImageView.widthAnchor.constraint(equalTo: brandView.widthAnchor, multiplier: 0.8),
-            brandImageView.heightAnchor.constraint(equalTo: brandImageView.widthAnchor)
-        ])
-    }
-    
-    
+
     //MARK: Layout
     func layoutInputs() {
         let stackView = UIStackView(arrangedSubviews: [
@@ -155,96 +146,19 @@ class ViewController: UIViewController {
         }
     }
     
-    func applyAsymmetricBorder(to view: UIView) {
-        view.layer.sublayers?.removeAll(where: { $0.name == "border" })
+    func createPickerToolbar(for textField: UITextField) -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        toolbar.barTintColor = UIColor(hex: "#b684df")
+        toolbar.tintColor = .white
         
-        let color = UIColor(hex: "#121212").cgColor
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(closePicker))
         
-        let top = CALayer()
-        top.name = "border"
-        top.backgroundColor = color
-        top.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 1)
+        toolbar.setItems([flexSpace, doneButton], animated: true)
         
-        let left = CALayer()
-        left.name = "border"
-        left.backgroundColor = color
-        left.frame = CGRect(x: 0, y: 0, width: 1, height: view.frame.height)
-        
-        let right = CALayer()
-        right.name = "border"
-        right.backgroundColor = color
-        right.frame = CGRect(x: view.frame.width - 4, y: 0, width: 4, height: view.frame.height)
-        
-        let bottom = CALayer()
-        bottom.name = "border"
-        bottom.backgroundColor = color
-        bottom.frame = CGRect(x: 0, y: view.frame.height - 4, width: view.frame.width, height: 4)
-        
-        [top, left, right, bottom].forEach { view.layer.addSublayer($0) }
+        return toolbar
     }
-    
-    @objc func touchDown(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.1) {
-            sender.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
-            sender.backgroundColor = UIColor(hex: "#a370d3") // slightly darker
-        }
-    }
-    
-    @objc func touchUp(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.1) {
-            sender.transform = .identity
-            sender.backgroundColor = UIColor(hex: "#b684df")
-        }
-    }
-
-
-}
-
-//MARK: - UITextFieldDelegate
-extension ViewController: UITextFieldDelegate {
-    
-}
-
-//MARK: - UIPickerViewDelegate
-extension ViewController: UIPickerViewDelegate {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == questionPicker {
-            return questionCount.count
-        } else if pickerView == categoryPicker {
-            return categories.count
-        } else {
-            return difficulties.count
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView == questionPicker {
-            return questionCount[row]
-        } else if pickerView == categoryPicker {
-            return categories[row]
-        } else {
-            return difficulties[row]
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView == questionPicker {
-            questionCountPickerField.text = questionCount[row]
-        }
-        else if pickerView == categoryPicker {
-            categoryPickerField.text = categories[row]
-        } else {
-            difficultyPickerField.text = difficulties[row]
-        }
-    }
-}
-
-extension ViewController: UIPickerViewDataSource {
-    
 }
 
 
