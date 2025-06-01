@@ -6,6 +6,11 @@
     <array>
         <string>Bangers-Regular.ttf</string>
         <string>Fredoka-VariableFont_wdth,wght.ttf</string>
+        <string>Fredoka-VariableFont_wdth,wght 2.ttf</string>
+        <string>ComicNeue-Bold.ttf</string>
+        <string>ComicNeue-BoldItalic.ttf</string>
+        <string>ComicNeue-Italic.ttf</string>
+        <string>ComicNeue-Regular.ttf</string>
     </array>
     <key>UIApplicationSceneManifest</key>
     <dict>

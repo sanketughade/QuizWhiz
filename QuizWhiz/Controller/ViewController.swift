@@ -21,12 +21,15 @@ class ViewController: UIViewController {
     
     let startQuizButton = UIButton()
     
+    let brandView = UIView();
+    
     let questionCount = ["10", "20", "50", "100"]
     let categories = ["General Knowledge", "Entertainment", "Science", "History"]
     let difficulties = ["Easy", "Medium", "Hard"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = UIColor(hex: "#f3f2e9")
         
         setupInput(questionCountPickerField, placeholder: "Number of Questions")
@@ -44,6 +47,7 @@ class ViewController: UIViewController {
         difficultyPicker.delegate = self
         difficultyPicker.dataSource = self
         
+        addBrandView()
         layoutInputs()
         
         //Add tap animations
@@ -55,7 +59,7 @@ class ViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         DispatchQueue.main.async {
-            [self.questionCountPickerField, self.categoryPickerField, self.difficultyPickerField, self.startQuizButton].forEach { self.applyAsymmetricBorder(to: $0) }
+            [self.brandView, self.questionCountPickerField, self.categoryPickerField, self.difficultyPickerField, self.startQuizButton].forEach { self.applyAsymmetricBorder(to: $0) }
         }
     }
     
@@ -81,12 +85,41 @@ class ViewController: UIViewController {
     func setupStartQuizButton(_ button: UIButton) {
         button.setTitle("Start Quiz 🚀", for: .normal)
         button.setTitleColor(UIColor(hex: "#f3f2e9"), for: .normal)
-        button.titleLabel?.font = UIFont(name: "Bangers", size: 22)
+        button.titleLabel?.font = UIFont(name: "ComicNeue-Regular", size: 28)
         button.backgroundColor = UIColor(hex: "#b684df")
         button.layer.masksToBounds = false
         
         //Padding inside button text
         button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 20, bottom: 14, trailing: 20)
+    }
+    
+    //MARK: Brand View
+    func addBrandView() {
+        brandView.translatesAutoresizingMaskIntoConstraints = false
+        brandView.layer.backgroundColor = UIColor(hex: "#50a46d").cgColor
+        
+        view.addSubview(brandView)
+        
+        NSLayoutConstraint.activate([
+            brandView.topAnchor.constraint(equalTo: view.topAnchor),
+            brandView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            brandView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            brandView.heightAnchor.constraint(equalTo: brandView.widthAnchor)
+        ])
+        
+        let brandImageView = UIImageView()
+        brandImageView.translatesAutoresizingMaskIntoConstraints = false
+        brandImageView.image = UIImage(named: "Quiz-Whiz")
+        brandImageView.contentMode = .scaleAspectFit
+        
+        brandView.addSubview(brandImageView)
+        
+        NSLayoutConstraint.activate([
+            brandImageView.centerXAnchor.constraint(equalTo: brandView.centerXAnchor),
+            brandImageView.centerYAnchor.constraint(equalTo: brandView.centerYAnchor),
+            brandImageView.widthAnchor.constraint(equalTo: brandView.widthAnchor, multiplier: 0.8),
+            brandImageView.heightAnchor.constraint(equalTo: brandImageView.widthAnchor)
+        ])
     }
     
     
@@ -111,7 +144,7 @@ class ViewController: UIViewController {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 120),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)
         ])

@@ -14,7 +14,7 @@ class SplashScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: "#1DB954")
+        view.backgroundColor = UIColor(hex: "#50a46d")
         
         animationView = LottieAnimationView(name: "launch_animation")
         animationView?.frame = view.bounds
