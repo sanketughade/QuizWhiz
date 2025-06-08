@@ -10,6 +10,7 @@ import UIKit
 
 class QuizViewController: UIViewController {
     var quizQuestions: [QuizQuestion] = []
+    var optionComponents: [OptionComponents] = []
     var quizDetails: QuizDetails? {
         didSet {
             // Make an API call here to get the questions
@@ -161,6 +162,10 @@ class QuizViewController: UIViewController {
             
             optionsStackView.addArrangedSubview(optionView)
             optionViews.append(optionView)
+            
+            optionComponents.append(OptionComponents(view: optionView, label: label, circle: circleView))
+            
+            
         }
         
         //Stack view constraints (positioned below questionView)
@@ -186,13 +191,43 @@ class QuizViewController: UIViewController {
     @objc func optionTapped(_ sender: UITapGestureRecognizer) {
         guard let tappedView = sender.view else { return }
         
-        for subView in tappedView.subviews {
-            if let stack = subView as? UIStackView {
-                for inner in stack.arrangedSubviews {
-                    if let label = inner as? UILabel {
-                        print("Tapped label text: \(label.text ?? "")")
-                    }
-                }
+        guard let selected = optionComponents.first(where: { $0.view == tappedView }) else { return }
+        
+        let selectedAnswer = selected.label.text ?? ""
+        let correctAnswer = quizQuestions[0].correct_answer
+        
+        for option in optionComponents {
+            let isCorrect = option.label.text == correctAnswer
+            let isSelected = option.view == tappedView
+            
+            //Reset any previous emoji
+            option.circle.subviews.forEach { $0.removeFromSuperview() }
+            
+            if isCorrect {
+                //Correct Answer
+                option.view.backgroundColor = UIColor(hex: isSelected ? "#c8e6c9" : "e8f5e9")
+                
+                let tick = UILabel()
+                tick.text = "✅"
+                tick.translatesAutoresizingMaskIntoConstraints = false
+                option.circle.addSubview(tick)
+                NSLayoutConstraint.activate([
+                    tick.centerXAnchor.constraint(equalTo: option.circle.centerXAnchor),
+                    tick.centerYAnchor.constraint(equalTo: option.circle.centerYAnchor)
+                ])
+            } else if isSelected {
+                option.view.backgroundColor = UIColor(hex: "ffcdd2")
+                
+                let cross = UILabel()
+                cross.text = "❌"
+                cross.translatesAutoresizingMaskIntoConstraints = false
+                option.circle.addSubview(cross)
+                NSLayoutConstraint.activate([
+                    cross.centerXAnchor.constraint(equalTo: option.circle.centerXAnchor),
+                    cross.centerYAnchor.constraint(equalTo: option.circle.centerYAnchor)
+                ])
+            } else {
+                option.view.backgroundColor = UIColor(hex: "b3e0ff")
             }
         }
     }

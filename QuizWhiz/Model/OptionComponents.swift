@@ -5,4 +5,10 @@
 //  Created by Sanket Ughade on 08/06/25.
 //
 
-import Foundation
+import UIKit
+
+struct OptionComponents {
+    let view: UIView
+    let label: UILabel
+    let circle: UIView
+}
