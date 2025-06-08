@@ -67,22 +67,38 @@ class ViewController: UIViewController {
         }
     }
     
+    /// Called when the user touches down on the Start Quiz button.
+    /// Shrinks the button slightly and darkens the background to give tap feedback.
     @objc func touchDown(_ sender: UIButton) {
+        //This function is called when the button is pressed
         UIView.animate(withDuration: 0.1) {
             sender.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
             sender.backgroundColor = UIColor(hex: "#a370d3") // slightly darker
         }
     }
     
+    /// Called when the user lifts their finger off the Start Quiz button
+    /// or when the tap is canceled. Resets the button to its original style.
     @objc func touchUp(_ sender: UIButton) {
         UIView.animate(withDuration: 0.1) {
             sender.transform = .identity
             sender.backgroundColor = UIColor(hex: "#b684df")
         }
+        startQuizPressed()
     }
     
     @objc func closePicker() {
         view.endEditing(true) //Dismiss the keyboard or picker
+    }
+    
+    @objc func dismissCustomAlert(_ sender: UIButton) {
+        if let overlay = view.viewWithTag(999) {
+            UIView.animate(withDuration: 0.2, animations: {
+                overlay.alpha = 0
+            }) { _ in
+                overlay.removeFromSuperview()
+            }
+        }
     }
     
     //MARK: Input Setup
@@ -158,6 +174,106 @@ class ViewController: UIViewController {
         toolbar.setItems([flexSpace, doneButton], animated: true)
         
         return toolbar
+    }
+    
+    func startQuizPressed() {
+        if isQuizDetailsValid() {
+            performSegue(withIdentifier: "goToQuiz", sender: nil)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToQuiz" {
+            let quizDetails = QuizDetails(numberOfQuestions: questionCountPickerField.text!, category: categoryPickerField.text!, difficulty: difficultyPickerField.text!)
+            
+            if let destinationVC = segue.destination as? QuizViewController {
+                destinationVC.quizDetails = quizDetails
+            }
+        }
+    }
+    
+    func showCustomAlert(message: String) {
+        //Dimmed background
+        let overlayView = UIView(frame: view.bounds)
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        overlayView.alpha = 0
+        view.addSubview(overlayView)
+        
+        //Alert Box
+        let alertBox = UIView()
+        alertBox.translatesAutoresizingMaskIntoConstraints = false
+        alertBox.backgroundColor = UIColor(hex: "#fff8e1")
+        overlayView.addSubview(alertBox)
+        
+        NSLayoutConstraint.activate([
+            alertBox.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor),
+            alertBox.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
+            alertBox.widthAnchor.constraint(equalToConstant: 280),
+            alertBox.heightAnchor.constraint(equalToConstant: 150)
+        ])
+        
+        //Message Label
+        let messageLabel = UILabel()
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel.text = message
+        messageLabel.textColor = UIColor(hex: "#d32f2f")
+        messageLabel.font = UIFont(name: "AvenirNext-Medium", size: 16)
+        messageLabel.numberOfLines = 0
+        messageLabel.textAlignment = .center
+        alertBox.addSubview(messageLabel)
+        
+        NSLayoutConstraint.activate([
+            messageLabel.topAnchor.constraint(equalTo: alertBox.topAnchor, constant: 20),
+            messageLabel.leadingAnchor.constraint(equalTo: alertBox.leadingAnchor, constant: 16),
+            messageLabel.trailingAnchor.constraint(equalTo: alertBox.trailingAnchor, constant: -16)
+        ])
+        
+        //Dismiss Button
+        let dismissButton = UIButton(type: .system)
+        dismissButton.translatesAutoresizingMaskIntoConstraints = false
+        dismissButton.setTitle("Git it!", for: .normal)
+        dismissButton.setTitleColor(.white, for: .normal)
+        dismissButton.backgroundColor = UIColor(hex: "#b684df")
+        dismissButton.titleLabel?.font = UIFont(name: "Fredoka", size: 16)
+        alertBox.addSubview(dismissButton)
+        
+        NSLayoutConstraint.activate([
+            dismissButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
+            dismissButton.centerXAnchor.constraint(equalTo: alertBox.centerXAnchor),
+            dismissButton.widthAnchor.constraint(equalToConstant: 100),
+            dismissButton.heightAnchor.constraint(equalToConstant: 40),
+            dismissButton.bottomAnchor.constraint(equalTo: alertBox.bottomAnchor, constant: -20)
+        ])
+        
+        //Dismiss Logic
+        dismissButton.addTarget(self, action: #selector(dismissCustomAlert(_:)), for: .touchUpInside)
+        
+        //Add border to alert box
+        alertBox.layoutIfNeeded()
+        alertBox.applyAsymmetricBorder()
+        
+        //Animate in
+        UIView.animate(withDuration: 0.25) {
+            overlayView.alpha = 1
+        }
+        
+        //Store refernece for dismissal
+        overlayView.tag = 999
+        
+    }
+    
+    private func isQuizDetailsValid() -> Bool {
+        if questionCountPickerField.text?.isEmpty ?? true {
+            showCustomAlert(message: "Please select number of questions")
+            return false
+        } else if categoryPickerField.text?.isEmpty ?? true {
+            showCustomAlert(message: "Please select the category")
+            return false
+        } else if difficultyPickerField.text?.isEmpty ?? true {
+            showCustomAlert(message: "Please select the difficulty")
+            return false
+        }
+        return true
     }
 }
 

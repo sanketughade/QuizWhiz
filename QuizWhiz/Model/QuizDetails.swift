@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct QuizDetails {
+    let numberOfQuestions: String;
+    let category: String;
+    let difficulty: String;
+}

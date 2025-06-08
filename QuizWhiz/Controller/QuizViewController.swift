@@ -6,3 +6,17 @@
 //
 
 import Foundation
+import UIKit
+
+class QuizViewController: UIViewController {
+    var quizDetails: QuizDetails? {
+        didSet {
+            // Make an API call here to get the questions
+            getQuestions()
+        }
+    }
+    
+    func getQuestions() {
+        
+    }
+}
