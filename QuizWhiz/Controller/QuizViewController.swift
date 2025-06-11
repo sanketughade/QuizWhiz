@@ -113,6 +113,7 @@ class QuizViewController: UIViewController {
         //Create option views(2 or 4 depending on your case)
         var optionTitles = quizQuestions[0].incorrect_answers
         optionTitles.append(quizQuestions[0].correct_answer)
+        optionTitles.shuffle()
         
         var optionViews: [UIView] = []
         var circleViews: [UIView] = []
