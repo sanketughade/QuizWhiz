@@ -12,6 +12,7 @@ class QuizViewController: UIViewController {
     var quizQuestions: [QuizQuestion] = []
     var optionComponents: [OptionComponents] = []
     var isAnswerSelected = false
+    let questionLabel = UILabel()
     let optionsStackView = UIStackView()
     var prevButton = UIButton()
     var nextButton = UIButton()
@@ -86,12 +87,13 @@ class QuizViewController: UIViewController {
             questionView.heightAnchor.constraint(equalToConstant: 100),
         ])
         
-        let questionLabel = UILabel()
+        
         questionLabel.translatesAutoresizingMaskIntoConstraints = false
         questionLabel.text = quizQuestions[0].question
         questionLabel.textColor = UIColor(hex: "#121212")
         questionLabel.font = UIFont(name: "AvenirNext-Medium", size: 18)
         questionLabel.textAlignment = .left
+        questionLabel.numberOfLines = 0
         
         questionView.addSubview(questionLabel)
         
@@ -111,9 +113,7 @@ class QuizViewController: UIViewController {
         view.addSubview(optionsStackView)
         
         //Create option views(2 or 4 depending on your case)
-        var optionTitles = quizQuestions[0].incorrect_answers
-        optionTitles.append(quizQuestions[0].correct_answer)
-        optionTitles.shuffle()
+        var optionTitles = getRandomizedOptions(correctOption: quizQuestions[currentQuestionIndex].correct_answer, incorrectOptions: quizQuestions[currentQuestionIndex].incorrect_answers)
         
         var optionViews: [UIView] = []
         var circleViews: [UIView] = []
@@ -264,7 +264,7 @@ class QuizViewController: UIViewController {
         guard let selected = optionComponents.first(where: { $0.view == tappedView }) else { return }
         
         let selectedAnswer = selected.label.text ?? ""
-        let correctAnswer = quizQuestions[0].correct_answer
+        let correctAnswer = quizQuestions[currentQuestionIndex].correct_answer
         
         for option in optionComponents {
             let isCorrect = option.label.text == correctAnswer
@@ -300,7 +300,7 @@ class QuizViewController: UIViewController {
                 option.view.backgroundColor = UIColor(hex: "b3e0ff")
             }
         }
-        if (currentQuestionIndex == 0) {
+        if (currentQuestionIndex < quizQuestions.count - 1) {
             enableButton(nextButton)
         }
     }
@@ -311,6 +311,7 @@ class QuizViewController: UIViewController {
     
     @objc func prevTouchUp(_ sender: UIButton) {
         touchUpAnimation(sender)
+        updateQuestionAndOptions(isNext: false)
     }
     
     @objc func nextTouchDown(_ sender: UIButton) {
@@ -319,6 +320,7 @@ class QuizViewController: UIViewController {
     
     @objc func nextTouchUp(_ sender: UIButton) {
         touchUpAnimation(sender)
+        updateQuestionAndOptions()
     }
     
     private func touchDownAnimation(_ button: UIButton) {
@@ -333,6 +335,50 @@ class QuizViewController: UIViewController {
             button.transform = .identity
             button.backgroundColor = UIColor(hex: "#b684df")
         }
+    }
+    
+    private func getRandomizedOptions(correctOption: String, incorrectOptions: [String]) -> [String] {
+        var options = incorrectOptions;
+        options.append(correctOption)
+        return options.shuffled();
+    }
+    
+    private func updateQuestionAndOptions(isNext: Bool = true) {
+        if isNext {
+            currentQuestionIndex += 1
+        } else {
+            currentQuestionIndex -= 1
+        }
+        
+        isAnswerSelected = false
+        
+        let currentQuestion = quizQuestions[currentQuestionIndex]
+        
+        questionLabel.text = currentQuestion.question
+        
+        let randomizedOptions = getRandomizedOptions(correctOption: currentQuestion.correct_answer, incorrectOptions: currentQuestion.incorrect_answers)
+        
+        for (i, option) in optionComponents.enumerated() {
+            if i < randomizedOptions.count {
+                option.label.text = randomizedOptions[i]
+                option.view.backgroundColor = UIColor(hex: "#b3e0ff")
+                option.circle.subviews.forEach { $0.removeFromSuperview() }
+            }
+        }
+        
+        if currentQuestionIndex == 0 {
+            disableButton(prevButton)
+        } else {
+            enableButton(prevButton)
+        }
+        
+        if isNext || currentQuestionIndex == quizQuestions.count - 1 {
+            disableButton(nextButton)
+        } else {
+            enableButton(nextButton)
+        }
+        
+        
     }
     
     
