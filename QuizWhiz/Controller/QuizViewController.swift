@@ -11,6 +11,7 @@ import UIKit
 class QuizViewController: UIViewController {
     var quizQuestions: [QuizQuestion] = []
     var optionComponents: [OptionComponents] = []
+    var isAnswerSelected = false
     var quizDetails: QuizDetails? {
         didSet {
             // Make an API call here to get the questions
@@ -189,6 +190,11 @@ class QuizViewController: UIViewController {
     }
     
     @objc func optionTapped(_ sender: UITapGestureRecognizer) {
+        
+        if isAnswerSelected { return }
+        
+        isAnswerSelected = true
+        
         guard let tappedView = sender.view else { return }
         
         guard let selected = optionComponents.first(where: { $0.view == tappedView }) else { return }
