@@ -213,6 +213,11 @@ class QuizViewController: UIViewController {
             prevNextStackView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
+        prevButton.addTarget(self, action: #selector(prevTouchDown(_:)), for: .touchDown)
+        prevButton.addTarget(self, action: #selector(prevTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        nextButton.addTarget(self, action: #selector(nextTouchDown), for: .touchDown)
+        nextButton.addTarget(self, action: #selector(nextTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        
         
         DispatchQueue.main.async {
             self.prevButton.applyAsymmetricBorder()
@@ -299,4 +304,36 @@ class QuizViewController: UIViewController {
             enableButton(nextButton)
         }
     }
+    
+    @objc func prevTouchDown(_ sender: UIButton) {
+        touchDownAnimation(sender)
+    }
+    
+    @objc func prevTouchUp(_ sender: UIButton) {
+        touchUpAnimation(sender)
+    }
+    
+    @objc func nextTouchDown(_ sender: UIButton) {
+        touchDownAnimation(sender)
+    }
+    
+    @objc func nextTouchUp(_ sender: UIButton) {
+        touchUpAnimation(sender)
+    }
+    
+    private func touchDownAnimation(_ button: UIButton) {
+        UIView.animate(withDuration: 0.1) {
+            button.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+            button.backgroundColor = UIColor(hex: "#a370d3")
+        }
+    }
+    
+    private func touchUpAnimation(_ button: UIButton) {
+        UIView.animate(withDuration: 0.1) {
+            button.transform = .identity
+            button.backgroundColor = UIColor(hex: "#b684df")
+        }
+    }
+    
+    
 }
