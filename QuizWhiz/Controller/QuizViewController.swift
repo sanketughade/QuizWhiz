@@ -15,6 +15,7 @@ class QuizViewController: UIViewController {
     let optionsStackView = UIStackView()
     var prevButton = UIButton()
     var nextButton = UIButton()
+    var currentQuestionIndex = 0
     var quizDetails: QuizDetails? {
         didSet {
             // Make an API call here to get the questions
@@ -215,6 +216,10 @@ class QuizViewController: UIViewController {
         DispatchQueue.main.async {
             self.prevButton.applyAsymmetricBorder()
             self.nextButton.applyAsymmetricBorder()
+            
+            //Disable prev and next buttons as the currentQuestionIndex is 0
+            self.disableButton(self.prevButton)
+            self.disableButton(self.nextButton)
         }
     }
     
@@ -230,6 +235,11 @@ class QuizViewController: UIViewController {
         button.contentEdgeInsets = UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
         
         return button
+    }
+    
+    private func disableButton(_ button: UIButton) {
+        button.isEnabled = false
+        button.alpha = 0.4
     }
     
     @objc func optionTapped(_ sender: UITapGestureRecognizer) {
