@@ -12,6 +12,9 @@ class QuizViewController: UIViewController {
     var quizQuestions: [QuizQuestion] = []
     var optionComponents: [OptionComponents] = []
     var isAnswerSelected = false
+    let optionsStackView = UIStackView()
+    var prevButton = UIButton()
+    var nextButton = UIButton()
     var quizDetails: QuizDetails? {
         didSet {
             // Make an API call here to get the questions
@@ -24,6 +27,7 @@ class QuizViewController: UIViewController {
         
         view.backgroundColor = UIColor(hex: "#f3f2e9")
         loadQuestionOptionsUI()
+        loadPreviousNextButtons()
     }
     
     func getQuestions() {
@@ -99,7 +103,6 @@ class QuizViewController: UIViewController {
         
         
         //Create stackview to hold the options
-        let optionsStackView = UIStackView()
         optionsStackView.translatesAutoresizingMaskIntoConstraints = false
         optionsStackView.axis = .vertical
         optionsStackView.spacing = 20
@@ -187,6 +190,46 @@ class QuizViewController: UIViewController {
             }
             optionViews.forEach { $0.applyAsymmetricBorder() }
         }
+    }
+    
+    func loadPreviousNextButtons() {
+        prevButton = getPreviousAndNextButtons("← Prev")
+        nextButton = getPreviousAndNextButtons("Next →")
+        
+        let prevNextStackView = UIStackView(arrangedSubviews: [prevButton, nextButton])
+        prevNextStackView.axis = .horizontal
+        prevNextStackView.distribution = .equalSpacing
+        prevNextStackView.alignment = .center
+        prevNextStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(prevNextStackView)
+        
+        NSLayoutConstraint.activate([
+            prevNextStackView.topAnchor.constraint(equalTo: optionsStackView.bottomAnchor, constant: 150),
+            prevNextStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            prevNextStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            prevNextStackView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        
+        DispatchQueue.main.async {
+            self.prevButton.applyAsymmetricBorder()
+            self.nextButton.applyAsymmetricBorder()
+        }
+    }
+    
+    private func getPreviousAndNextButtons(_ title: String) -> UIButton {
+        let button = UIButton()
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(hex: "#f3f2e9"), for: .normal)
+        button.titleLabel?.font = UIFont(name: "ComicNeue-Regular", size: 24)
+        button.backgroundColor = UIColor(hex: "#b684df")
+        button.layer.masksToBounds = false
+        
+        //Add padding inside button
+        button.contentEdgeInsets = UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
+        
+        return button
     }
     
     @objc func optionTapped(_ sender: UITapGestureRecognizer) {
