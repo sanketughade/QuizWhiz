@@ -242,6 +242,11 @@ class QuizViewController: UIViewController {
         button.alpha = 0.4
     }
     
+    private func enableButton(_ button: UIButton) {
+        button.isEnabled = true
+        button.alpha = 1.0
+    }
+    
     @objc func optionTapped(_ sender: UITapGestureRecognizer) {
         
         if isAnswerSelected { return }
@@ -288,6 +293,9 @@ class QuizViewController: UIViewController {
             } else {
                 option.view.backgroundColor = UIColor(hex: "b3e0ff")
             }
+        }
+        if (currentQuestionIndex == 0) {
+            enableButton(nextButton)
         }
     }
 }
