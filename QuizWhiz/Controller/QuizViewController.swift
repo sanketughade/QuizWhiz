@@ -195,8 +195,8 @@ class QuizViewController: UIViewController {
     }
     
     func loadPreviousNextButtons() {
-        prevButton = getPreviousAndNextButtons("← Prev")
-        nextButton = getPreviousAndNextButtons("Next →")
+        prevButton = getPreviousAndNextButtons("← Prev 🧭")
+        nextButton = getPreviousAndNextButtons("🎯 Next →")
         
         let prevNextStackView = UIStackView(arrangedSubviews: [prevButton, nextButton])
         prevNextStackView.axis = .horizontal
@@ -232,9 +232,14 @@ class QuizViewController: UIViewController {
     private func getPreviousAndNextButtons(_ title: String) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
-        button.setTitleColor(UIColor(hex: "#f3f2e9"), for: .normal)
-        button.titleLabel?.font = UIFont(name: "ComicNeue-Regular", size: 24)
+        button.setTitleColor(UIColor(hex: "#ffbd59"), for: .normal)
+        button.titleLabel?.font = UIFont(name: "ComicNeue-Bold", size: 22)
         button.backgroundColor = UIColor(hex: "#b684df")
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 4
+        
         button.layer.masksToBounds = false
         
         //Add padding inside button
