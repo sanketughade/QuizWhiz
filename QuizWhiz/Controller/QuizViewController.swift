@@ -207,10 +207,10 @@ class QuizViewController: UIViewController {
         view.addSubview(prevNextStackView)
         
         NSLayoutConstraint.activate([
-            prevNextStackView.topAnchor.constraint(equalTo: optionsStackView.bottomAnchor, constant: 150),
             prevNextStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             prevNextStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            prevNextStackView.heightAnchor.constraint(equalToConstant: 50)
+            prevNextStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            prevNextStackView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         prevButton.addTarget(self, action: #selector(prevTouchDown(_:)), for: .touchDown)
