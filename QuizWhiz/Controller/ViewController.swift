@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 class ViewController: UIViewController {
     
@@ -83,8 +84,8 @@ class ViewController: UIViewController {
         UIView.animate(withDuration: 0.1) {
             sender.transform = .identity
             sender.backgroundColor = UIColor(hex: "#b684df")
+            self.startQuizLoading()
         }
-        startQuizPressed()
     }
     
     @objc func closePicker() {
@@ -98,6 +99,47 @@ class ViewController: UIViewController {
             }) { _ in
                 overlay.removeFromSuperview()
             }
+        }
+    }
+    
+    func startQuizLoading() {
+        let backgroundOverlay = UIView(frame: view.bounds)
+        backgroundOverlay.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        view.addSubview(backgroundOverlay)
+        
+        let whiteContainer = UIView()
+        whiteContainer.backgroundColor = .white
+        whiteContainer.translatesAutoresizingMaskIntoConstraints = false
+        backgroundOverlay.addSubview(whiteContainer)
+        
+        NSLayoutConstraint.activate([
+            whiteContainer.centerXAnchor.constraint(equalTo: backgroundOverlay.centerXAnchor),
+            whiteContainer.centerYAnchor.constraint(equalTo: backgroundOverlay.centerYAnchor),
+            whiteContainer.widthAnchor.constraint(equalToConstant: 220),
+            whiteContainer.heightAnchor.constraint(equalToConstant: 220)
+        ])
+        
+        DispatchQueue.main.async {
+            whiteContainer.applyAsymmetricBorder()
+        }
+        
+        let loadingAnimationView = LottieAnimationView(name: "quiz_loading_animation")
+        loadingAnimationView.loopMode = .loop
+        loadingAnimationView.translatesAutoresizingMaskIntoConstraints = false
+        whiteContainer.addSubview(loadingAnimationView)
+        
+        NSLayoutConstraint.activate([
+            loadingAnimationView.centerXAnchor.constraint(equalTo: whiteContainer.centerXAnchor),
+            loadingAnimationView.centerYAnchor.constraint(equalTo: whiteContainer.centerYAnchor),
+            loadingAnimationView.heightAnchor.constraint(equalToConstant: 200),
+            loadingAnimationView.widthAnchor.constraint(equalToConstant: 200)
+        ])
+        
+        loadingAnimationView.play()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            backgroundOverlay.removeFromSuperview()
+            self.startQuizPressed()
         }
     }
     
