@@ -260,7 +260,11 @@ class ViewController: UIViewController {
                     switch result {
                     case .success(let questions):
                         self.backgroundOverlay.removeFromSuperview()
-                        self.performSegue(withIdentifier: "goToQuiz", sender: questions)
+                        if questions.count == 0 {
+                            self.showCustomAlert(message: "No questions found for the selected category.")
+                        } else {
+                            self.performSegue(withIdentifier: "goToQuiz", sender: questions)
+                        }
                         
                     case .failure(let error):
                         self.backgroundOverlay.removeFromSuperview()
