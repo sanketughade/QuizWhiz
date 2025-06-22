@@ -26,7 +26,7 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         if pickerView == questionPicker {
             return questionCount[row]
         } else if pickerView == categoryPicker {
-            return categories[row]
+            return categories[row].name
         } else {
             return difficulties[row]
         }
@@ -37,7 +37,8 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             questionCountPickerField.text = questionCount[row]
         }
         else if pickerView == categoryPicker {
-            categoryPickerField.text = categories[row]
+            categoryId = categories[row].id
+            categoryPickerField.text = categories[row].name
         } else {
             difficultyPickerField.text = difficulties[row]
         }

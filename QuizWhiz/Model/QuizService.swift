@@ -8,10 +8,8 @@
 import Foundation
 
 struct QuizService {
-    static func fetchQuestions(numberOfQuestions: String, category: String, difficulty: String, completion: @escaping (Result<[QuizQuestion], Error>) -> Void) {
-        let urlString = "https://opentdb.com/api.php?amount=\(numberOfQuestions)&category=10&difficulty=\(difficulty.lowercased())&type=multiple"
-        
-        print(urlString)
+    static func fetchQuestions(numberOfQuestions: String, categoryId: Int, difficulty: String, completion: @escaping (Result<[QuizQuestion], Error>) -> Void) {
+        let urlString = "https://opentdb.com/api.php?amount=\(numberOfQuestions)&category=\(categoryId)&difficulty=\(difficulty.lowercased())&type=multiple"
         
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "InvalidURL", code: 400, userInfo: nil)))
