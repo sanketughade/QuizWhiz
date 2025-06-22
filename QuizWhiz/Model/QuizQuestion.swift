@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct QuizQuestion {
+struct QuizAPIResponse: Codable {
+    let response_code: Int
+    let results: [QuizQuestion]
+}
+
+struct QuizQuestion: Codable {
     let question: String
     let correct_answer: String
     let incorrect_answers: [String]

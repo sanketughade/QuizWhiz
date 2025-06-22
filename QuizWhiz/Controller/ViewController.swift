@@ -27,6 +27,8 @@ class ViewController: UIViewController {
     let questionCount = ["10", "20", "50", "100"]
     let categories = ["General Knowledge", "Entertainment", "Science", "History"]
     let difficulties = ["Easy", "Medium", "Hard"]
+    
+    var backgroundOverlay: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,7 +105,7 @@ class ViewController: UIViewController {
     }
     
     func startQuizLoading() {
-        let backgroundOverlay = UIView(frame: view.bounds)
+        backgroundOverlay = UIView(frame: view.bounds)
         backgroundOverlay.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         view.addSubview(backgroundOverlay)
         
@@ -137,10 +139,12 @@ class ViewController: UIViewController {
         
         loadingAnimationView.play()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            backgroundOverlay.removeFromSuperview()
-            self.startQuizPressed()
-        }
+        startQuizPressed()
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+//            self.backgroundOverlay.removeFromSuperview()
+//            self.startQuizPressed()
+//        }
     }
     
     //MARK: Input Setup
@@ -220,17 +224,31 @@ class ViewController: UIViewController {
     
     func startQuizPressed() {
         if isQuizDetailsValid() {
-            performSegue(withIdentifier: "goToQuiz", sender: nil)
+            QuizService.fetchQuestions(
+                numberOfQuestions: questionCountPickerField.text!,
+                category: categoryPickerField.text!,
+                difficulty: difficultyPickerField.text!
+            ) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let questions):
+                        self.backgroundOverlay.removeFromSuperview()
+                        self.performSegue(withIdentifier: "goToQuiz", sender: questions)
+                        
+                    case .failure(let error):
+                        self.backgroundOverlay.removeFromSuperview()
+                        self.showCustomAlert(message: "Failed to load quiz: \(error.localizedDescription)")
+                    }
+                }
+            }
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToQuiz" {
-            let quizDetails = QuizDetails(numberOfQuestions: questionCountPickerField.text!, category: categoryPickerField.text!, difficulty: difficultyPickerField.text!)
-            
-            if let destinationVC = segue.destination as? QuizViewController {
-                destinationVC.quizDetails = quizDetails
-            }
+        if segue.identifier == "goToQuiz",
+           let destination = segue.destination as? QuizViewController,
+           let questions = sender as? [QuizQuestion] {
+            destination.quizQuestions = questions
         }
     }
     

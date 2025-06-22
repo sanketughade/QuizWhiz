@@ -17,12 +17,6 @@ class QuizViewController: UIViewController {
     var prevButton = UIButton()
     var nextButton = UIButton()
     var currentQuestionIndex = 0
-    var quizDetails: QuizDetails? {
-        didSet {
-            // Make an API call here to get the questions
-            getQuestions()
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,48 +24,6 @@ class QuizViewController: UIViewController {
         view.backgroundColor = UIColor(hex: "#f3f2e9")
         loadQuestionOptionsUI()
         loadPreviousNextButtons()
-    }
-    
-    func getQuestions() {
-        quizQuestions.append(
-            QuizQuestion(question: "How fast is USB 3.1 Gen 2 theoretically?", correct_answer: "10 Gb/s", incorrect_answers: ["5 Gb/s", "8 Gb/s", "1 Gb/s"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "What year was the Swift programming language introduced?", correct_answer: "2014", incorrect_answers: ["2010", "2012", "2016"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "Which planet is known as the Red Planet?", correct_answer: "Mars", incorrect_answers: ["Venus", "Jupiter", "Saturn"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "What does HTTP stand for?", correct_answer: "HyperText Transfer Protocol", incorrect_answers: ["HighText Transfer Protocol", "HyperText Transmission Protocol", "High Transfer Text Protocol"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "Who painted the Mona Lisa?", correct_answer: "Leonardo da Vinci", incorrect_answers: ["Michelangelo", "Vincent van Gogh", "Pablo Picasso"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "What is the capital of Japan?", correct_answer: "Tokyo", incorrect_answers: ["Osaka", "Kyoto", "Hiroshima"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "Which gas is most abundant in the Earth's atmosphere?", correct_answer: "Nitrogen", incorrect_answers: ["Oxygen", "Carbon Dioxide", "Hydrogen"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "Which company developed the video game Fortnite?", correct_answer: "Epic Games", incorrect_answers: ["Valve", "Activision", "Ubisoft"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "What is the square root of 144?", correct_answer: "12", incorrect_answers: ["14", "16", "10"])
-        )
-
-        quizQuestions.append(
-            QuizQuestion(question: "In what country is the Great Pyramid of Giza located?", correct_answer: "Egypt", incorrect_answers: ["Mexico", "India", "Greece"])
-        )
     }
     
     func loadQuestionOptionsUI() {
@@ -89,7 +41,8 @@ class QuizViewController: UIViewController {
         
         
         questionLabel.translatesAutoresizingMaskIntoConstraints = false
-        questionLabel.text = quizQuestions[0].question
+        questionLabel.text = decodeHTMLEntities(quizQuestions[0].question)
+        print(quizQuestions[0].question)
         questionLabel.textColor = UIColor(hex: "#121212")
         questionLabel.font = UIFont(name: "AvenirNext-Medium", size: 18)
         questionLabel.textAlignment = .left
@@ -113,7 +66,7 @@ class QuizViewController: UIViewController {
         view.addSubview(optionsStackView)
         
         //Create option views(2 or 4 depending on your case)
-        var optionTitles = getRandomizedOptions(correctOption: quizQuestions[currentQuestionIndex].correct_answer, incorrectOptions: quizQuestions[currentQuestionIndex].incorrect_answers)
+        let optionTitles = getRandomizedOptions(correctOption: quizQuestions[currentQuestionIndex].correct_answer, incorrectOptions: quizQuestions[currentQuestionIndex].incorrect_answers)
         
         var optionViews: [UIView] = []
         var circleViews: [UIView] = []
@@ -384,6 +337,17 @@ class QuizViewController: UIViewController {
         }
         
         
+    }
+    
+    private func decodeHTMLEntities(_ text: String) -> String {
+        return text
+            .replacingOccurrences(of: "&quot;", with: "\"")
+            .replacingOccurrences(of: "&#039;", with: "'")
+            .replacingOccurrences(of: "&apos;", with: "'")
+            .replacingOccurrences(of: "&amp;", with: "&")
+            .replacingOccurrences(of: "&lt;", with: "<")
+            .replacingOccurrences(of: "&gt;", with: ">")
+            .replacingOccurrences(of: "&nbsp;", with: " ")
     }
     
     
