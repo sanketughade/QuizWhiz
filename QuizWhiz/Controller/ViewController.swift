@@ -322,7 +322,7 @@ class ViewController: UIViewController {
         //Dismiss Button
         let dismissButton = UIButton(type: .system)
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
-        dismissButton.setTitle("Git it!", for: .normal)
+        dismissButton.setTitle("Got it!", for: .normal)
         dismissButton.setTitleColor(.white, for: .normal)
         dismissButton.backgroundColor = UIColor(hex: "#b684df")
         dismissButton.titleLabel?.font = UIFont(name: "Fredoka", size: 16)
